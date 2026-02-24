@@ -10,7 +10,7 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    process.env.FRONT_ORIGIN || ""
+    process.env.FRONT_IASE || ""
   ].filter(Boolean),
   credentials: true
 })
