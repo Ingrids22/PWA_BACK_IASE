@@ -32,7 +32,8 @@ app.use(async (_req, _res, next) => {
   }
 });
 
-app.get("/", (_req, res) => res.json({ ok: true, name: "Brandon Todo API" }));
+app.get("/", (_req, res) => res.json({ ok: true, 
+  valorVariable: process.env.FRONT_IASE || "No definida" }));
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
