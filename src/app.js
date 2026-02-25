@@ -7,22 +7,22 @@ import { connectToDB } from "./db/connect.js";
 
 const app = express();
 
-// Configuración de CORS mejorada
-app.use(cors({
+const corsOptions = {
   origin: [
     "http://localhost:5173",
-    process.env.FRONT_IASE || "" // Asegúrate de que en Vercel se llame exactamente FRONT_IASE
+    process.env.FRONT_IASE || ""
   ].filter(Boolean),
-  credentials: true
-}));
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"]
+};
 
-// ¡ESTA LÍNEA ES CLAVE! Responde a las peticiones preflight (OPTIONS)
-app.options("*", cors()); 
+// Un solo cors con la misma config para todo, incluyendo OPTIONS
+app.use(cors(corsOptions));
 
 app.use(express.json());
 app.use(morgan("dev"));
 
-// Conexión a mongo DB
 app.use(async (_req, _res, next) => {
   try {
     await connectToDB();
@@ -32,8 +32,10 @@ app.use(async (_req, _res, next) => {
   }
 });
 
-app.get("/", (_req, res) => res.json({ ok: true, 
-  valorVariable: process.env.FRONT_IASE || "No definida" }));
+app.get("/", (_req, res) => res.json({ 
+  ok: true, 
+  valorVariable: process.env.FRONT_IASE || "No definida" 
+}));
 app.use("/api/auth", authRoutes);
 app.use("/api/tasks", taskRoutes);
 
